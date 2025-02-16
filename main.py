@@ -16,12 +16,12 @@ class TTSRequest(BaseModel):
     lang: str = "en"
     slow: bool = False
 
-# 生成语音函数
-async def generate_tts(text: str, lang: str, slow: bool = False) -> bytes:
+# 生成语音函数（同步版本）
+def generate_tts_sync(text: str, lang: str, slow: bool = False) -> bytes:
     try:
         tts = gTTS(text=text, lang=lang, slow=slow)
         fp = BytesIO()
-        await run_in_threadpool(tts.write_to_fp, fp)
+        tts.write_to_fp(fp)
         fp.seek(0)
         return fp.getvalue()
     except Exception as e:
@@ -33,7 +33,7 @@ async def tts_endpoint(request: Request):
     try:
         data = await request.json()
         req = TTSRequest(**data)
-        audio = await generate_tts(req.text, req.lang, req.slow)
+        audio = await run_in_threadpool(generate_tts_sync, req.text, req.lang, req.slow)
         return Response(audio, media_type="audio/mpeg")
     
     except Exception as e:
@@ -75,7 +75,8 @@ def web_interface():
             
         with st.spinner("生成语音中..."):
             try:
-                audio_bytes = await generate_tts(text, lang, slow)
+                # 使用同步版本的生成函数
+                audio_bytes = generate_tts_sync(text, lang, slow)
                 st.success("生成成功！")
                 
                 # 显示音频播放器
