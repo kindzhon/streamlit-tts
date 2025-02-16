@@ -47,7 +47,7 @@ def web_interface():
     
     with col2:
         lang = st.selectbox("选择语言", 
-                           options=["en", "zh-CN", "es", "fr", "ja", "ko"],
+                           options=[ "zh-CN","en", "es", "fr", "ja", "ko"],
                            index=0)
         slow = st.checkbox("慢速模式")
         api_key = st.text_input("API 密钥（可选）", type="password")
