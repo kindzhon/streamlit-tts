@@ -26,7 +26,7 @@ def generate_tts_sync(text: str, lang: str, slow: bool = False) -> bytes:
         return fp.getvalue()
     except Exception as e:
         raise ValueError(f"生成语音失败: {str(e)}")
-
+///
 # API 端点
 @st.experimental_route("/api/tts", methods=["POST"])
 async def tts_endpoint(request: Request):
@@ -42,7 +42,7 @@ async def tts_endpoint(request: Request):
             status_code=400,
             media_type="application/json"
         )
-
+///
 # 网页界面
 def web_interface():
     st.title("🎤 文本转语音服务")
